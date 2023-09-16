@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "M3"
+        jdk "java-17"
+    }
+    environment {
+        DOCKER_HUB = credentials ('a47b666c-1cf7-467a-8e88-5c39d15cfcf2')
+        registryUrl = 'gdmsnipe/apmt'
+        imageName = 'DockerDeployTest'
+        containerName = 'DocTest'
+        deployServer = '194.195.113.64'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh "mvn -v"
+                sh "java -version"
+                //git branch: 'develop', credentialsId: 'c25ee85b-e1df-459e-8faf-68bbe9e61cd5', url: 'https://Gdmsnipe@bitbucket.org/gdmsnipe/apmt_backend.git'
+            }
+        }
+        stage('Test') {
+            steps {
+                
+                // mvn clean install -Dmaven.test.skip=true
+                // '''
+                echo "Test"
+            }
+        }
+        stage('code quality analysis') {
+            steps {
+                script {
+                    echo "COde"
+                    
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "PR"
+                }
+            }
+        }
+        stage('Push Docker Image with Sh env') {
+            steps {
+                echo "Docker sh echo"
+                withCredentials([usernamePassword(credentialsId:'a47b666c-1cf7-467a-8e88-5c39d15cfcf2' , passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                     // Tag the Docker image
+                    sh "docker tag jenkapmt gdmsnipe/apmt:jenkapmt"
+                    // Push the Docker image to Docker Hub
+                    sh "docker push gdmsnipe/apmt:jenkapmt"
+                    
+                    //sh "docker tag ${imageName} ${registryUrl}/${imageName}"
+                    //sh "docker push ${registryUrl}/${imageName}"
+                }
+                
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // SSH into the deployment server
+                
+                // sshScript remote: "user@${deployServer}", 
+                // script: '''
+                //     docker pull ${registryUrl}/${imageName}
+                //     docker stop ${containerName} || true
+                //     docker rm ${containerName} || true
+                //     docker run -d --name ${containerName} -p 8080:8080 ${registryUrl}/${imageName}
+                // '''
+                
+                
+                // sshagent(['apmt']) {
+                sh "ssh user@${deployServer} 'docker pull ${registryUrl}/${imageName}'"
+                sh "ssh user@${deployServer} 'docker stop ${containerName} || true'"
+                sh "ssh user@${deployServer} 'docker rm ${containerName} || true'"
+                sh "ssh user@${deployServer} 'docker run -d --name ${containerName} -p 8082:8082 ${registryUrl}/${imageName}'"
+                // }
+            }
+        }
+       
+    }
+}

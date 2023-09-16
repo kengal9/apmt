@@ -1,0 +1,96 @@
+spring:
+   servlet:
+        multipart:
+            max-file-size: 50MB
+            max-request-size: 50MB 
+            enabled: true
+
+   mail:
+        host:      smtp.gmail.com
+        port:      587
+        username:  suma529@gmail.com
+        password:  pdrnincvbaxauwps
+
+        properties:
+            mail:
+                 smtp:
+                   auth:       true
+                   
+                   starttls:
+                       enable: true
+   datasource:
+        data: classpath:apmt.sql
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        hikari:
+            connection-timeout: 10000
+            maximum-pool-size: 10
+            minimum-idle: 15
+            pool-name: HikariConnectionPool
+      
+        
+        url: jdbc:mysql://lin-10471-6470-mysql-primary.servers.linodedb.net:3306/apmt?createDatabaseIfNotExist=true&useSSL=true
+        username: linroot
+        password: Z81M7Wcqu2qB@cUM
+   jpa:
+        generate-ddl: true
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL57Dialect
+                format_sql: true
+                id:
+                    new_generator_mappings: false
+   security:
+        user:
+            name: abhi
+            password: abhi
+        basic:
+            enabled: false    
+            
+logging:
+  level:
+    s7:
+      application: WARN
+    org:
+      springframework:
+        web: ERROR
+    com:
+      snipe:
+        apmt: DEBUG
+  pattern: 
+    file: "%d{yyyy-MM-dd HH:mm:ss} {%thread} %-5level %logger{36} - %msg%n"
+  file: 
+    name: /root/apmt/log/apmt.log
+    
+jwt:
+    expiry:
+        hour: 24
+    secret: jwtAPMTSnipeSecretjwtAPMTSnipeSecretjwtAPMTSnipeSecretjwtAPMTSnipeSecretjwtAPMTSnipeSecretjwtAPMTSnipeSecret   
+
+server:
+   port: 8082
+   servlet:
+        session:
+              timeout: 180m
+       
+apmt:
+ apmtUrl: http://194.195.113.64:8082/v1
+ headerApiKey: APMTSNIPE
+ 
+cloud:
+  linode:
+    credentials:
+      access_key : VM8QA7OG8YQX3LSF8THP
+      secret_key : YZu1gC5zu6I9tqR9kadASBxbWY3npFBZjCp0WwqY
+    region :
+      static: ap-south-1
+    stack:
+      auto: false        
+application:
+  bucket : 
+    name : apmt      
+    
+razorpay account:
+          secretid: rzp_test_C2yKpVHk9HgbaZ
+          secretkey: 6mVCFzIeUWSi7BjECuNtqs5t    
